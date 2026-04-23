@@ -1,0 +1,183 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NuGetAudit>false</NuGetAudit>
+    <NoWarn>$(NoWarn);NU1900</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Spectre.Console" Version="0.55.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Moduls\AircraftModels\Application\Services\" />
+    <Folder Include="src\Moduls\AircraftModels\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\AircraftModels\Infrastructure\Persistence\Seeders\" />
+    <Folder Include="src\Moduls\AircraftModels\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\AircraftModels\UI\" />
+    <Folder Include="src\Moduls\Aircraft\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\Aircraft\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\Aircraft\ui\" />
+    <Folder Include="src\Moduls\Baggage\" />
+    <Folder Include="src\Moduls\Baggage\Application\" />
+    <Folder Include="src\Moduls\Baggage\Application\Interfaces\" />
+    <Folder Include="src\Moduls\Baggage\Application\Services\" />
+    <Folder Include="src\Moduls\Baggage\Application\UseCases\" />
+    <Folder Include="src\Moduls\Baggage\Domain\" />
+    <Folder Include="src\Moduls\Baggage\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\Baggage\Domain\Repositories\" />
+    <Folder Include="src\Moduls\Baggage\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\Baggage\Infrastructure\" />
+    <Folder Include="src\Moduls\Baggage\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\Baggage\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\Baggage\UI\" />
+    <Folder Include="src\Moduls\Baggage_Types\" />
+    <Folder Include="src\Moduls\Baggage_Types\Application\" />
+    <Folder Include="src\Moduls\Baggage_Types\Application\Interfaces\" />
+    <Folder Include="src\Moduls\Baggage_Types\Application\Services\" />
+    <Folder Include="src\Moduls\Baggage_Types\Application\UseCases\" />
+    <Folder Include="src\Moduls\Baggage_Types\Domain\" />
+    <Folder Include="src\Moduls\Baggage_Types\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\Baggage_Types\Domain\Repositories\" />
+    <Folder Include="src\Moduls\Baggage_Types\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\Baggage_Types\Infrastructure\" />
+    <Folder Include="src\Moduls\Baggage_Types\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\Baggage_Types\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\Baggage_Types\UI\" />
+    <Folder Include="src\Moduls\BookingFlights\" />
+    <Folder Include="src\Moduls\BookingFlights\Application\" />
+    <Folder Include="src\Moduls\BookingFlights\Application\Interfaces\" />
+    <Folder Include="src\Moduls\BookingFlights\Application\Services\" />
+    <Folder Include="src\Moduls\BookingFlights\Application\UseCases\" />
+    <Folder Include="src\Moduls\BookingFlights\Domain\" />
+    <Folder Include="src\Moduls\BookingFlights\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\BookingFlights\Domain\Repositories\" />
+    <Folder Include="src\Moduls\BookingFlights\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\BookingFlights\Infrastructure\" />
+    <Folder Include="src\Moduls\BookingFlights\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\BookingFlights\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\BookingFlights\Infrastructure\Persistence\Seeders\" />
+    <Folder Include="src\Moduls\BookingFlights\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\BookingFlights\ui\" />
+    <Folder Include="src\Moduls\BookingStatuses\" />
+    <Folder Include="src\Moduls\BookingStatuses\Application\" />
+    <Folder Include="src\Moduls\BookingStatuses\Application\Interfaces\" />
+    <Folder Include="src\Moduls\BookingStatuses\Application\Services\" />
+    <Folder Include="src\Moduls\BookingStatuses\Application\UseCases\" />
+    <Folder Include="src\Moduls\BookingStatuses\Domain\" />
+    <Folder Include="src\Moduls\BookingStatuses\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\BookingStatuses\Domain\Repositories\" />
+    <Folder Include="src\Moduls\BookingStatuses\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\BookingStatuses\Infrastructure\" />
+    <Folder Include="src\Moduls\BookingStatuses\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\BookingStatuses\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\BookingStatuses\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\BookingStatuses\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\BookingStatuses\ui\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Application\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Application\Interfaces\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Application\Services\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Domain\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Domain\Repositories\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Infrastructure\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\BookingStatusTransitions\ui\" />
+    <Folder Include="src\Moduls\Bookings\" />
+    <Folder Include="src\Moduls\Bookings\Application\" />
+    <Folder Include="src\Moduls\Bookings\Application\Interfaces\" />
+    <Folder Include="src\Moduls\Bookings\Application\Services\" />
+    <Folder Include="src\Moduls\Bookings\Application\UseCases\" />
+    <Folder Include="src\Moduls\Bookings\Domain\" />
+    <Folder Include="src\Moduls\Bookings\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\Bookings\Domain\Repositories\" />
+    <Folder Include="src\Moduls\Bookings\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\Bookings\Infrastructure\" />
+    <Folder Include="src\Moduls\Bookings\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\Bookings\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\Bookings\Infrastructure\Persistence\Seeders\" />
+    <Folder Include="src\Moduls\Bookings\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\Bookings\ui\" />
+    <Folder Include="src\Moduls\CabinConfiguration\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\CabinConfiguration\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\CabinConfiguration\Infrastructure\ui\" />
+    <Folder Include="src\Moduls\CabinTypes\Application\Services\" />
+    <Folder Include="src\Moduls\CabinTypes\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\CabinTypes\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\CabinTypes\UI\" />
+    <Folder Include="src\Moduls\CardIssuers\UI\" />
+    <Folder Include="src\Moduls\CardTypes\UI\" />
+    <Folder Include="src\Moduls\CheckIns\UI\" />
+    <Folder Include="src\Moduls\Customers\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\Customers\Infrastructure\Persistence\Seeders\" />
+    <Folder Include="src\Moduls\EmailDomains\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\EmailDomains\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\EmailDomains\ui\" />
+    <Folder Include="src\Moduls\FlightSeats\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\FlightSeats\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\FlightSeats\ui\" />
+    <Folder Include="src\Moduls\FlightStatusTransitions\ui\" />
+    <Folder Include="src\Moduls\FlightStatus\Domain\ValueObject\" />
+    <Folder Include="src\Moduls\InvoiceItems\UI\" />
+    <Folder Include="src\Moduls\InvoiceItemTypes\UI\" />
+    <Folder Include="src\Moduls\Invoices\UI\" />
+    <Folder Include="src\Moduls\PassengerReservations\Application\Services\" />
+    <Folder Include="src\Moduls\Passengers\Domain\Repositories\" />
+    <Folder Include="src\Moduls\Passengers\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\Passengers\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\Passengers\ui\" />
+    <Folder Include="src\Moduls\PaymentMediumTypes\Domain\Repositories\" />
+    <Folder Include="src\Moduls\PaymentMediumTypes\UI\" />
+    <Folder Include="src\Moduls\PaymentMethods\UI\" />
+    <Folder Include="src\Moduls\PaymentStatuses\UI\" />
+    <Folder Include="src\Moduls\Payments\Application\Interfaces\" />
+    <Folder Include="src\Moduls\Payments\UI\" />
+    <Folder Include="src\Moduls\PeopleEmails\ui\" />
+    <Folder Include="src\Moduls\Permissions\UI\" />
+    <Folder Include="src\Moduls\Reports\" />
+    <Folder Include="src\Moduls\Reports\Application\" />
+    <Folder Include="src\Moduls\Reports\Application\Interfaces\" />
+    <Folder Include="src\Moduls\Reports\Application\Services\" />
+    <Folder Include="src\Moduls\Reports\Application\UseCases\" />
+    <Folder Include="src\Moduls\Reports\UI\" />
+    <Folder Include="src\Moduls\RolesPermissions\UI\" />
+    <Folder Include="src\Moduls\Routes\Infrastructure\persistence\" />
+    <Folder Include="src\Moduls\Routes\Infrastructure\persistence\seeders\" />
+    <Folder Include="src\Moduls\Routes\ui\" />
+    <Folder Include="src\Moduls\SeatLocationTypes\Infrastructure\Persistence\" />
+    <Folder Include="src\Moduls\SeatLocationTypes\Infrastructure\Persistence\seeders\" />
+    <Folder Include="src\Moduls\SeatLocationTypes\ui\" />
+    <Folder Include="src\Moduls\Sessions\UI\" />
+    <Folder Include="src\Moduls\StaffAvailability\Infrastructure\Persistencia\" />
+    <Folder Include="src\Moduls\StaffAvailability\Infrastructure\Persistencia\seeders\" />
+    <Folder Include="src\Moduls\StaffAvailability\ui\" />
+    <Folder Include="src\Moduls\SystemRoles\Infrastructure\Repository\" />
+    <Folder Include="src\Moduls\SystemRoles\UI\" />
+    <Folder Include="src\Moduls\TicketStates\Application\Services\" />
+    <Folder Include="src\Moduls\TicketStates\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\Users\UI\" />
+    <Folder Include="src\Shared\Session\" />
+  </ItemGroup>
+</Project>

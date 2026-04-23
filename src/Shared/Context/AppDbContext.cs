@@ -1,0 +1,215 @@
+using System;
+using Microsoft.EntityFrameworkCore;
+using GestorDeVuelosProyectoFinal.Moduls.Continents.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Countries.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Regions.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.AircraftModels.Domain.ValueObject;
+using GestorDeVuelosProyectoFinal.src.Moduls.AircraftModels.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.AircraftManufacturers.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.Cities.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.StreetTypes.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Addresses.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.Aircraft.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.CabinConfiguration.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.CabinTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.DocumentTypes.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.EmailDomains.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.People.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.PeopleEmails.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.PeoplePhones.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.PhoneCodes.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.Customers.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.Airlines.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Airports.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.AirportAirline.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.PersonalPositions.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Personal.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.AvailabilityStates.Infrastructure.Persistence.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Routes.Infrastructure.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.Seasons.Infrastructure.Entities;
+using GestorDeVuelosProyectoFinal.Moduls.StaffAvailability.Infrastructure.Entities;
+using GestorDeVuelosProyectoFinal.src.Moduls.RouteStopovers.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.PassengerTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Rates.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.FlightStatus.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.FlightAssignments.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.FlightRoles.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Flights.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.FlightStatusTransitions.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.SeatLocationTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.FlightSeats.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Passengers.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingStatuses.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingStatusTransitions.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingFlights.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Baggage.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.BaggageTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.CardTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.CardIssuers.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Checkins.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.CheckinStates.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.FlightReservations.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.Moduls.InvoiceItemTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.InvoiceItems.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Invoices.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.PassengerReservations.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.PaymentMediumTypes.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.PaymentMethods.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.PaymentStatuses.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Payments.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Permissions.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.RolePermissions.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Sessions.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.SystemRoles.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Ticket.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.TicketStates.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.Users.Infrastructure.Entity;
+
+namespace GestorDeVuelosProyectoFinal.src.Shared.Context;
+
+// Este es el contexto principal de negocio.
+// Aquí conviven casi todas las tablas del sistema excepto las de auth separada.
+public class AppDbContext : DbContext
+{
+    public DbSet<ContinentEntity> Continents { get; set; }
+    public DbSet<CountryEntity> Countries { get; set; }
+    public DbSet<RegionEntity> Regions { get; set; }
+    public DbSet<CityEntity> Cities { get; set; } = null!;
+    public DbSet<AircraftModelsEntity> AircraftModels { get; set; } 
+    public DbSet<AircraftManufacturerEntity> AircraftManufacturers { get; set; } = null!;
+    public DbSet<AircraftEntity> Aircrafts { get; set; } = null!;
+    public DbSet<StreetTypeEntity> StreetTypes { get; set; }
+    public DbSet<AddressEntity> Addresses { get; set; } = null!;
+    public DbSet<CabinTypeEntity> CabinTypes { get; set; } = null!;
+    public DbSet<CabinConfiurationEntity> CabinConfigurations { get; set; } = null!;
+    public DbSet<EmailDomainsEntity> EmailDomains { get; set; } = null!;
+    public DbSet<PersonEmailEntity> PersonEmails { get; set; } = null!;
+    public DbSet<CustomerEntity> Customers { get; set; } = null!;
+    public DbSet<DocumentTypeEntity> DocumentTypes { get; set; } = null!;
+    public DbSet<PersonEntity> Persons { get; set; } = null!;
+    public DbSet<PeoplePhoneEntity> PeoplePhones { get; set; } = null!;
+    public DbSet<PhoneCodeEntity> PhoneCodes { get; set; } = null!;
+    public DbSet<AirlineEntity> Airlines { get; set; } = null!;
+    public DbSet<AirportEntity> Airports { get; set; } = null!;
+    public DbSet<RouteEntity> Routes { get; set; } = null!;
+    public DbSet<AirportAirlineEntity> AirportAirlines { get; set; } = null!;
+    public DbSet<PersonalPositionEntity> PersonalPositions { get; set; } = null!;
+    public DbSet<StaffEntity> Staffs { get; set; } = null!;
+    public DbSet<FlightAssignmentEntity> FlightAssignments { get; set; } = null!;
+    public DbSet<FlightEntity> Flights { get; set; } = null!;
+    public DbSet<AvailabilityStateEntity> AvailabilityStates { get; set; } = null!;
+    public DbSet<SeasonEntity> Seasons { get; set; } = null!;
+    public DbSet<StaffAvailabilityEntity> StaffAvailabilities { get; set; } = null!;
+    public DbSet<RouteStopoversEntity> RouteStopovers { get; set; } = null!;
+    public DbSet<PassengerTypeEntity> PassengerTypes { get; set; } = null!;
+    public DbSet<RateEntity> Rates { get; set; } = null!;
+    public DbSet<FlightStatusEntity> FlightStatuses { get; set; } = null!;
+    public DbSet<FlightStatusTransitionEntity> FlightStatusTransitions { get; set; } = null!;
+    public DbSet<FlightRolesEntity> FlightRoles { get; set; } = null!;
+    public DbSet<SeatLocationTypesEntity> SeatLocationTypes { get; set; } = null!;
+    public DbSet<FlightSeatEntity> FlightSeats { get; set; } = null!;
+    public DbSet<PassengersEntity> Passengers { get; set; } = null!;
+    public DbSet<BookingStatusesEntity> BookingStatuses { get; set; } = null!;
+    public DbSet<BookingStatusTransitionEntity> BookingStatusTransitions { get; set; } = null!;
+    public DbSet<BookingEntity> Bookings { get; set; } = null!;
+    public DbSet<BookingFlightsEntity> BookingFlights { get; set; } = null!;
+    public DbSet<FlightReservationsEntity> FlightReservations { get; set; } = null!;
+    public DbSet<PassengerReservationsEntity> PassengerReservations { get; set; } = null!;
+    public DbSet<PaymentMethodsEntity> PaymentMethods { get; set; } = null!;
+    public DbSet<PaymentMediumTypesEntity> PaymentMediumTypes { get; set; } = null!;
+    public DbSet<PaymentStatusesEntity> PaymentStatuses { get; set; } = null!;
+    public DbSet<PaymentsEntity> Payments { get; set; } = null!;
+    public DbSet<InvoicesEntity> Invoices { get; set; } = null!;
+    public DbSet<InvoiceItemsEntity> InvoiceItems { get; set; } = null!;
+    public DbSet<InvoiceItemTypesEntity> InvoiceItemTypes { get; set; } = null!;
+    public DbSet<BaggageEntity> Baggages { get; set; } = null!;
+    public DbSet<BaggageTypesEntity> BaggageTypes { get; set; } = null!;
+    public DbSet<CheckinEntity> Checkins { get; set; } = null!;
+    public DbSet<CheckinStatesEntity> CheckinStates { get; set; } = null!;
+    public DbSet<CardIssuerEntity> CardIssuers { get; set; } = null!;
+    public DbSet<CardTypesEntity> CardTypes { get; set; } = null!;
+    public DbSet<PermissionsEntity> Permissions { get; set; } = null!;
+    public DbSet<RolePermissionsEntity> RolePermissions { get; set; } = null!;
+    public DbSet<SystemRolesEntity> SystemRoles { get; set; } = null!;
+    public DbSet<TicketEntity> Tickets { get; set; } = null!;
+    public DbSet<TicketEntity> tickets => Tickets;
+    public DbSet<TicketStatesEntity> TicketStates { get; set; } = null!;
+    public DbSet<SessionsEntity> Sessions { get; set; } = null!;
+    public DbSet<UsersEntity> Users { get; set; } = null!;
+    public DbSet<FlightAssignmentStaffReferenceEntity> FlightAssignmentStaffReferences { get; set; } = null!;
+    
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        // Registramos una por una las configuraciones para dejar bien definido
+        // cómo se mapea cada entidad a MySQL.
+        modelBuilder.ApplyConfiguration(new ContinentEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RegionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CityEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AircraftModelsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AircraftManufacturerEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AircraftEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new StreetTypeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AddressEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CabinTypeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CabinConfigurationEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new DocumentTypeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new EmailDomainsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PersonEmailEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CustomerEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PeoplePhoneEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PhoneCodeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AirlineEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AirportEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RouteEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AirportAirlineEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PersonalPositionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new StaffEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightAssignmentEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailabilityStateEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SeasonEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new StaffAvailabilityEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RouteStopoversEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PassengerTypeEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RateEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightStatusEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightStatusTransitionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightRolesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SeatLocationTypesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightSeatEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PassengersEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingStatusesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingStatusTransitionEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BookingFlightsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightReservationsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PassengerReservationsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentMethodsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentMediumTypesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentStatusesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InvoicesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InvoiceItemsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new InvoiceItemTypesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BaggageEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new BaggageTypesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CheckinEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CheckinStatesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CardIssuerEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new CardTypesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new PermissionsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new RolePermissionsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SystemRolesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketStatesEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new SessionsEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new UsersEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new FlightAssignmentStaffReferenceEntityConfiguration());
+    }
+
+}
