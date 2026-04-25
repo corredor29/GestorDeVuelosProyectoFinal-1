@@ -7,8 +7,6 @@ using GestorDeVuelosProyectoFinal.src.Shared.Session;
 
 namespace GestorDeVuelosProyectoFinal.src.Shared.UI;
 
-// Esta pantalla se encarga del login operativo contra la tabla users del sistema.
-// Además registra la sesión y deja cargada la sesión en memoria para la consola.
 public class LoginConsoleUI
 {
     private readonly IUsersService _usersService;
@@ -38,7 +36,21 @@ public class LoginConsoleUI
         {
             AnsiConsole.WriteLine();
 
-            var username = AnsiConsole.Ask<string>("[yellow]Usuario:[/]").Trim();
+            var continuar = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[grey]¿Qué deseas hacer?[/]")
+                    .HighlightStyle(new Style(foreground: Color.DeepSkyBlue1))
+                    .AddChoices("Iniciar sesión", "Volver al menú anterior"));
+
+            if (continuar == "Volver al menú anterior")
+                return false;
+
+            // ✅ 0 = volver
+            var username = AnsiConsole.Ask<string>("[yellow]Usuario (0 = volver):[/]").Trim();
+
+            if (username == "0")
+                return false;
+
             var password = AnsiConsole.Prompt(
                 new TextPrompt<string>("[yellow]Contraseña:[/]")
                     .Secret());
@@ -120,8 +132,6 @@ public class LoginConsoleUI
             {
                 try
                 {
-                    // Cerramos todas las sesiones activas del usuario actual
-                    // para que no queden colgadas en la base.
                     var sessions = await _sessionsService
                         .GetActiveSessionsByUserIdAsync(UserSession.Current.UserId);
 
@@ -143,7 +153,6 @@ public class LoginConsoleUI
     {
         try
         {
-            // Tomamos una IPv4 local si está disponible. Si falla, simplemente devolvemos null.
             var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
             var ip = host.AddressList
                 .FirstOrDefault(x => x.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);

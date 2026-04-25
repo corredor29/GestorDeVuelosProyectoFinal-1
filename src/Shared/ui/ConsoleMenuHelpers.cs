@@ -2,7 +2,6 @@ using Spectre.Console;
 
 namespace GestorDeVuelosProyectoFinal.src.Shared.ui;
 
-/// <summary>
 /// Patrones comunes para poder regresar sin guardar durante formularios en consola.
 /// </summary>
 public static class ConsoleMenuHelpers

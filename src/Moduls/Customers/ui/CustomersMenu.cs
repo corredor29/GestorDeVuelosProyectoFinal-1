@@ -233,20 +233,28 @@ public sealed class CustomersMenu : IModuleUI
             .Where(p => p.Id is not null)
             .ToDictionary(p => p.Id.Value, p => p);
 
-        // Si hay clientes huérfanos por datos viejos o inconsistentes, los limpiamos
-        // para que el panel no muestre registros rotos.
         var orphanCustomers = customers
             .Where(c => !people.ContainsKey(c.PersonId))
             .ToList();
 
         foreach (var orphan in orphanCustomers)
-            await _service.DeleteAsync(orphan.Id.Value);
+        {
+            try
+            {
+                await _service.DeleteAsync(orphan.Id.Value);
+            }
+            catch (InvalidOperationException ex)
+            {
+                // No se puede eliminar el huérfano porque tiene reservas asociadas.
+                // Lo ignoramos silenciosamente; seguirá fuera del listado visible.
+                AnsiConsole.MarkupLine($"[grey]Advertencia: {Markup.Escape(ex.Message)}[/]");
+            }
+        }
 
         return customers
             .Where(c => people.ContainsKey(c.PersonId))
             .ToList();
     }
-
     private async Task<int?> PromptAvailablePersonIdAsync()
     {
         var people = (await _people.GetAllAsync())

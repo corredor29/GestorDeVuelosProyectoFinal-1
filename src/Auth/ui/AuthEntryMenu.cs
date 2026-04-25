@@ -11,8 +11,6 @@ using Spectre.Console;
 
 namespace GestorDeVuelosProyectoFinal.Auth.ui;
 
-// Este menú es la puerta de entrada del sistema.
-// Desde aquí la persona inicia sesión, se registra y luego cae en el panel correcto.
 public sealed class AuthEntryMenu
 {
     private readonly LoginConsoleUI _login;
@@ -33,11 +31,10 @@ public sealed class AuthEntryMenu
             AnsiConsole.Clear();
             RenderAccessHeader();
 
-            // Leemos las credenciales demo desde configuración para no dejarlas fijas en código.
             var adminUser = _configuration["Auth:DefaultAdmin:Username"] ?? "admin";
             var adminPass = _configuration["Auth:DefaultAdmin:Password"] ?? "Admin123!";
-            var demoUser = _configuration["Auth:DefaultUser:Username"] ?? "usuario";
-            var demoPass = _configuration["Auth:DefaultUser:Password"] ?? "User123!";
+            var demoUser  = _configuration["Auth:DefaultUser:Username"]  ?? "usuario";
+            var demoPass  = _configuration["Auth:DefaultUser:Password"]  ?? "User123!";
 
             var credTable = new Table()
                 .Border(TableBorder.Rounded)
@@ -46,7 +43,7 @@ public sealed class AuthEntryMenu
                 .AddColumn("[bold grey]Usuario[/]")
                 .AddColumn("[bold grey]Contraseña[/]");
             credTable.AddRow("[yellow]Administrador[/]", $"[white]{Markup.Escape(adminUser)}[/]", $"[dim]{Markup.Escape(adminPass)}[/]");
-            credTable.AddRow("[deepskyblue1]Demo[/]", $"[white]{Markup.Escape(demoUser)}[/]", $"[dim]{Markup.Escape(demoPass)}[/]");
+            credTable.AddRow("[deepskyblue1]Demo[/]",    $"[white]{Markup.Escape(demoUser)}[/]",  $"[dim]{Markup.Escape(demoPass)}[/]");
 
             AnsiConsole.Write(
                 new Panel(credTable)
@@ -64,14 +61,9 @@ public sealed class AuthEntryMenu
 
             switch (option)
             {
-                case "Iniciar sesión":
-                    await LoginFlowAsync(cancellationToken);
-                    break;
-                case "Registrar usuario":
-                    await RegisterFlowAsync(cancellationToken);
-                    break;
-                case "Salir":
-                    return;
+                case "Iniciar sesión":    await LoginFlowAsync(cancellationToken);    break;
+                case "Registrar usuario": await RegisterFlowAsync(cancellationToken); break;
+                case "Salir":             return;
             }
         }
     }
@@ -108,13 +100,35 @@ public sealed class AuthEntryMenu
 
         AnsiConsole.WriteLine();
 
-        var username = AnsiConsole.Prompt(
-            new TextPrompt<string>("[deepskyblue1]Nuevo usuario[/] [grey]❯[/]")
-                .PromptStyle(new Style(foreground: Color.White))
-                .Validate(s => !string.IsNullOrWhiteSpace(s) && s.Trim().Length is >= 3 and <= 50
-                    ? ValidationResult.Success()
-                    : ValidationResult.Error("[red]Debe tener entre 3 y 50 caracteres.[/]")));
+        var continuar = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[grey]¿Qué deseas hacer?[/]")
+                .HighlightStyle(new Style(foreground: Color.DeepSkyBlue1))
+                .AddChoices("Registrar usuario", "Volver al menú anterior"));
 
+        if (continuar == "Volver al menú anterior")
+            return;
+
+        // ── Nuevo usuario ──────────────────────────────────────────
+        var username = AnsiConsole.Prompt(
+            new TextPrompt<string>("[deepskyblue1]Nuevo usuario[/] [grey](0 = volver) ❯[/]")
+                .PromptStyle(new Style(foreground: Color.White))
+                .Validate(s =>
+                {
+                    if (s.Trim() == "0") return ValidationResult.Success();
+                    return !string.IsNullOrWhiteSpace(s) && s.Trim().Length is >= 3 and <= 50
+                        ? ValidationResult.Success()
+                        : ValidationResult.Error("[red]Debe tener entre 3 y 50 caracteres.[/]");
+                }));
+
+        if (username.Trim() == "0")
+        {
+            AnsiConsole.MarkupLine("[grey]Operación cancelada.[/]");
+            await Task.Delay(800, cancellationToken);
+            return;
+        }
+
+        // ── Contraseña ─────────────────────────────────────────────
         var pass = AnsiConsole.Prompt(
             new TextPrompt<string>("[deepskyblue1]Contraseña[/] [grey]❯[/]")
                 .PromptStyle(new Style(foreground: Color.White))
@@ -123,6 +137,7 @@ public sealed class AuthEntryMenu
                     ? ValidationResult.Success()
                     : ValidationResult.Error("[red]Debe tener al menos 6 caracteres.[/]")));
 
+        // ── Repetir contraseña ─────────────────────────────────────
         var pass2 = AnsiConsole.Prompt(
             new TextPrompt<string>("[deepskyblue1]Repetir contraseña[/] [grey]❯[/]")
                 .PromptStyle(new Style(foreground: Color.White))
@@ -145,7 +160,6 @@ public sealed class AuthEntryMenu
             if (exists)
                 throw new InvalidOperationException($"El usuario '{u}' ya existe.");
 
-            // Las cuentas nuevas entran como Client para caer directo al portal del usuario.
             var role = await db.SystemRoles.FirstOrDefaultAsync(r => r.Name == "Client", cancellationToken);
             if (role is null)
             {
@@ -157,14 +171,14 @@ public sealed class AuthEntryMenu
             var now = DateTime.UtcNow;
             db.Users.Add(new UsersEntity
             {
-                Username = u,
+                Username     = u,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(pass),
-                Person_Id = null,
-                Role_Id = role.Id,
-                IsActive = true,
-                LastAccess = null,
-                CreatedAt = now,
-                UpdatedAt = now
+                Person_Id    = null,
+                Role_Id      = role.Id,
+                IsActive     = true,
+                LastAccess   = null,
+                CreatedAt    = now,
+                UpdatedAt    = now
             });
 
             await db.SaveChangesAsync(cancellationToken);
@@ -182,16 +196,16 @@ public sealed class AuthEntryMenu
     private async Task PostLoginAsync(CancellationToken cancellationToken)
     {
         var session = UserSession.Current ?? throw new InvalidOperationException("No hay una sesión activa.");
-        var role = session.RoleName ?? "";
+        var role    = session.RoleName ?? "";
 
         using var scope = _scopes.CreateScope();
-        // Según el rol enviamos a un menú distinto.
+
         if (string.Equals(role, "Admin", StringComparison.OrdinalIgnoreCase))
         {
             await scope.ServiceProvider.GetRequiredService<AdminNavigationMenu>().RunAsync(cancellationToken);
         }
         else if (string.Equals(role, "Client", StringComparison.OrdinalIgnoreCase)
-                 || string.Equals(role, "User", StringComparison.OrdinalIgnoreCase))
+              || string.Equals(role, "User",   StringComparison.OrdinalIgnoreCase))
         {
             await scope.ServiceProvider.GetRequiredService<ClientPortalMenu>().RunAsync(cancellationToken);
         }
