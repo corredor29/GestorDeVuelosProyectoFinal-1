@@ -162,6 +162,13 @@
     <Folder Include="src\Moduls\Reports\Application\Services\" />
     <Folder Include="src\Moduls\Reports\Application\UseCases\" />
     <Folder Include="src\Moduls\Reports\UI\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Domain\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Domain\Repositories\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Infrastructure\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\ReschedulingHistory\Infrastructure\Repository\" />
     <Folder Include="src\Moduls\RolesPermissions\UI\" />
     <Folder Include="src\Moduls\Routes\Infrastructure\persistence\" />
     <Folder Include="src\Moduls\Routes\Infrastructure\persistence\seeders\" />
@@ -178,6 +185,13 @@
     <Folder Include="src\Moduls\TicketStates\Application\Services\" />
     <Folder Include="src\Moduls\TicketStates\Infrastructure\Entity\" />
     <Folder Include="src\Moduls\Users\UI\" />
+    <Folder Include="src\Moduls\WaitingList\" />
+    <Folder Include="src\Moduls\WaitingList\Domain\" />
+    <Folder Include="src\Moduls\WaitingList\Domain\Aggregate\" />
+    <Folder Include="src\Moduls\WaitingList\Domain\Repositories\" />
+    <Folder Include="src\Moduls\WaitingList\Infrastructure\" />
+    <Folder Include="src\Moduls\WaitingList\Infrastructure\Entity\" />
+    <Folder Include="src\Moduls\WaitingList\Infrastructure\Repository\" />
     <Folder Include="src\Shared\Session\" />
   </ItemGroup>
 </Project>

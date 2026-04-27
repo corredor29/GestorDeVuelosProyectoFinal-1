@@ -4,6 +4,8 @@ using GestorDeVuelosProyectoFinal.src.Moduls.Aircraft.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.FlightStatus.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.FlightSeats.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.BookingFlights.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.ReschedulingHistory.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.WaitingList.Infrastructure.Entity;
 namespace GestorDeVuelosProyectoFinal.src.Moduls.Flights.Infrastructure.Entity;
 
 public sealed class FlightEntity
@@ -27,4 +29,6 @@ public sealed class FlightEntity
     public FlightStatusEntity? FlightStatus { get; set; }
     public ICollection<FlightSeatEntity> FlightSeats { get; set; } = new List<FlightSeatEntity>();
     public ICollection<BookingFlightsEntity> BookingFlights { get; set; } = new List<BookingFlightsEntity>();
+    public ICollection<ReschedulingHistoryEntity> ReschedulingHistory {get; set;} = new List<ReschedulingHistoryEntity>();
+    public ICollection<WaitingListEntity> WaitingLists { get; set; } = new List<WaitingListEntity>();
 }

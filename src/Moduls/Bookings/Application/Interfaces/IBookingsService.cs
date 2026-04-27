@@ -15,4 +15,9 @@ public interface IBookingsService
     Task CancelAsync(int bookingId, CancellationToken cancellationToken = default);
     Task DeleteByIdAsync(int id, CancellationToken cancellationToken = default);
     Task DeleteByClientIdAsync(int clientId, CancellationToken cancellationToken = default);
+
+    Task<bool> RescheduleAsync(int bookingId, int currentFlightId, int newFlightId, string reason, CancellationToken cancellationToken = default);
+
+    Task AddToWaitingListAsync(int bookingId, int flightId, int priority = 0, CancellationToken cancellationToken = default);
+    Task<int?> PromoteFromWaitingListAsync(int cancelledFlightId, CancellationToken cancellationToken = default);
 }

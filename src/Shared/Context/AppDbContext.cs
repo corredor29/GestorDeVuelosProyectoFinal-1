@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using GestorDeVuelosProyectoFinal.Moduls.Continents.Infrastructure.Persistence.Entities;
 using GestorDeVuelosProyectoFinal.Moduls.Countries.Infrastructure.Persistence.Entities;
 using GestorDeVuelosProyectoFinal.Moduls.Regions.Infrastructure.Persistence.Entities;
-using GestorDeVuelosProyectoFinal.src.Moduls.AircraftModels.Domain.ValueObject;
 using GestorDeVuelosProyectoFinal.src.Moduls.AircraftModels.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.AircraftManufacturers.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.Moduls.Cities.Infrastructure.Persistence.Entities;
@@ -65,6 +64,8 @@ using GestorDeVuelosProyectoFinal.src.Moduls.SystemRoles.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.Ticket.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.TicketStates.Infrastructure.Entity;
 using GestorDeVuelosProyectoFinal.src.Moduls.Users.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.ReschedulingHistory.Infrastructure.Entity;
+using GestorDeVuelosProyectoFinal.src.Moduls.WaitingList.Infrastructure.Entity;
 
 namespace GestorDeVuelosProyectoFinal.src.Shared.Context;
 
@@ -138,6 +139,8 @@ public class AppDbContext : DbContext
     public DbSet<SessionsEntity> Sessions { get; set; } = null!;
     public DbSet<UsersEntity> Users { get; set; } = null!;
     public DbSet<FlightAssignmentStaffReferenceEntity> FlightAssignmentStaffReferences { get; set; } = null!;
+    public DbSet<ReschedulingHistoryEntity> ReschedulingHistories { get; set; } = null!;
+    public DbSet<WaitingListEntity> WaitingLists { get; set; } = null!;
     
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -210,6 +213,8 @@ public class AppDbContext : DbContext
         modelBuilder.ApplyConfiguration(new SessionsEntityConfiguration());
         modelBuilder.ApplyConfiguration(new UsersEntityConfiguration());
         modelBuilder.ApplyConfiguration(new FlightAssignmentStaffReferenceEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new ReschedulingHistoryEntityConfiguration());
+        modelBuilder.ApplyConfiguration(new WaitingListEntityConfiguration());
     }
 
 }
