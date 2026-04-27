@@ -12,18 +12,28 @@ public sealed class BookingsService : IBookingsService
     private readonly DeleteBookingUseCase _delete;
     private readonly ChangeBookingStatusUseCase _changeStatus;
 
+    private readonly RescheduleBookingUseCase _reschedule;
+    private readonly AddToWaitingListUseCase _addToWaitingList;
+    private readonly PromoteFromWaitingListUseCase _promote;
+
     public BookingsService(
         GetBookingsUseCase get,
         CreateBookingUseCase create,
         UpdateBookingUseCase update,
         DeleteBookingUseCase delete,
-        ChangeBookingStatusUseCase changeStatus)
+        ChangeBookingStatusUseCase changeStatus,
+        RescheduleBookingUseCase reschedule,
+        AddToWaitingListUseCase addToWaitingList,
+        PromoteFromWaitingListUseCase promote)
     {
-        _get = get;
-        _create = create;
-        _update = update;
-        _delete = delete;
-        _changeStatus = changeStatus;
+        _get              = get;
+        _create           = create;
+        _update           = update;
+        _delete           = delete;
+        _changeStatus     = changeStatus;
+        _reschedule       = reschedule;
+        _addToWaitingList = addToWaitingList;
+        _promote          = promote;
     }
 
     public Task<IEnumerable<DomainBooking>> GetAllAsync(CancellationToken cancellationToken = default)
@@ -58,4 +68,13 @@ public sealed class BookingsService : IBookingsService
 
     public Task DeleteByClientIdAsync(int clientId, CancellationToken cancellationToken = default)
         => _delete.ExecuteByClientIdAsync(clientId, cancellationToken);
+
+    public Task<bool> RescheduleAsync(int bookingId, int currentFlightId, int newFlightId, string reason, CancellationToken cancellationToken = default)
+        => _reschedule.ExecuteAsync(bookingId, currentFlightId, newFlightId, reason, cancellationToken);
+
+    public Task AddToWaitingListAsync(int bookingId, int flightId, int priority = 0, CancellationToken cancellationToken = default)
+        => _addToWaitingList.ExecuteAsync(bookingId, flightId, priority, cancellationToken);
+
+    public Task<int?> PromoteFromWaitingListAsync(int cancelledFlightId, CancellationToken cancellationToken = default)
+        => _promote.ExecuteAsync(cancelledFlightId, cancellationToken);
 }

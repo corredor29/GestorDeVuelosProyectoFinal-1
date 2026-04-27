@@ -748,3 +748,49 @@ CREATE TABLE sessions (
 -- ============================================================
 -- END OF SCRIPT — 63 tables
 -- ============================================================
+
+-- 1. Historial de reprogramaciones
+CREATE TABLE IF NOT EXISTS flight_rescheduling_history (
+    id                  INT             AUTO_INCREMENT PRIMARY KEY,
+    booking_id          INT             NOT NULL,
+    previous_flight_id  INT             NOT NULL,
+    new_flight_id       INT             NOT NULL,
+    changed_at          DATETIME        NOT NULL,
+    reason              VARCHAR(255)    NOT NULL,
+    FOREIGN KEY (booking_id)         REFERENCES bookings(id)  ON DELETE RESTRICT,
+    FOREIGN KEY (previous_flight_id) REFERENCES flights(id)   ON DELETE RESTRICT,
+    FOREIGN KEY (new_flight_id)      REFERENCES flights(id)   ON DELETE RESTRICT
+);
+-- 2. Lista de espera
+CREATE TABLE IF NOT EXISTS waiting_list (
+    id              INT             AUTO_INCREMENT PRIMARY KEY,
+    booking_id      INT             NOT NULL,
+    flight_id       INT             NOT NULL,
+    requested_at    DATETIME        NOT NULL,
+    priority        INT             NOT NULL DEFAULT 0,
+    status          VARCHAR(20)     NOT NULL DEFAULT 'Waiting',  -- Waiting | Promoted | Cancelled
+    UNIQUE (booking_id, flight_id),
+    FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE RESTRICT,
+    FOREIGN KEY (flight_id)  REFERENCES flights(id)  ON DELETE RESTRICT,
+    CONSTRAINT chk_waiting_status CHECK (status IN ('Waiting', 'Promoted', 'Cancelled')),
+    CONSTRAINT chk_priority CHECK (priority >= 0)
+);
+
+CREATE INDEX idx_waiting_flight  ON waiting_list (flight_id);
+CREATE INDEX idx_waiting_booking ON waiting_list (booking_id);
+
+-- 3. Agregar estado de reserva "Rescheduled" y "OnHold" si no existen
+INSERT IGNORE INTO booking_statuses (name) VALUES ('Rescheduled');
+INSERT IGNORE INTO booking_statuses (name) VALUES ('OnHold');
+
+-- 4. Transiciones permitidas para los nuevos estados
+--    Confirmed  → Rescheduled
+--    Confirmed  → OnHold
+--    OnHold     → Confirmed
+--    OnHold     → Cancelled
+INSERT IGNORE INTO booking_status_transitions (from_status_id, to_status_id)
+SELECT f.id, t.id FROM booking_statuses f, booking_statuses t
+WHERE (f.name = 'Confirmed'   AND t.name = 'Rescheduled')
+   OR (f.name = 'Confirmed'   AND t.name = 'OnHold')
+   OR (f.name = 'OnHold'      AND t.name = 'Confirmed')
+   OR (f.name = 'OnHold'      AND t.name = 'Cancelled');

@@ -232,6 +232,12 @@ using GestorDeVuelosProyectoFinal.src.Moduls.Reports.Application.Interfaces;
 using GestorDeVuelosProyectoFinal.src.Moduls.Reports.Application.Services;
 using GestorDeVuelosProyectoFinal.src.Moduls.Reports.UI;
 using GestorDeVuelosProyectoFinal.src.Shared.UI;
+using GestorDeVuelosProyectoFinal.src.Moduls.ReschedulingHistory.Domain.Repositories;
+using GestorDeVuelosProyectoFinal.src.Moduls.ReschedulingHistory.Infrastructure.Repository;
+using GestorDeVuelosProyectoFinal.src.Moduls.WaitingList.Domain.Repositories;
+using GestorDeVuelosProyectoFinal.src.Moduls.WaitingList.Infrastructure.Repository;
+using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.Application.UseCases;
+using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.UI;
 
 namespace GestorDeVuelosProyectoFinal.Composition;
 
@@ -307,6 +313,8 @@ public static class GestorServiceRegistration
         "GestorDeVuelosProyectoFinal.src.Moduls.Passengers",
         "GestorDeVuelosProyectoFinal.src.Moduls.FlightSeats",
         "GestorDeVuelosProyectoFinal.src.Moduls.SeatLocationTypes",
+        "GestorDeVuelosProyectoFinal.src.Moduls.ReschedulingHistory",
+        "GestorDeVuelosProyectoFinal.src.Moduls.WaitingList",
     };
 
     private static bool IsInModuleScope(Type type)
@@ -540,6 +548,14 @@ public static class GestorServiceRegistration
         services.AddTransient<ReportsMenu>();
         services.AddTransient<IClientPortalService, ClientPortalService>();
         services.AddTransient<ClientPortalMenu>();
+
+        services.AddTransient<IReschedulingHistoryRepository, ReschedulingHistoryRepository>();
+        services.AddTransient<IWaitingListRepository,         WaitingListRepository>();
+        services.AddTransient<RescheduleBookingUseCase>();
+        services.AddTransient<AddToWaitingListUseCase>();
+        services.AddTransient<PromoteFromWaitingListUseCase>();
+        services.AddTransient<RescheduleMenu>();
+
 
         return services;
     }

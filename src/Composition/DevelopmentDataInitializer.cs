@@ -103,6 +103,8 @@ public static class DevelopmentDataInitializer
 
         await Invoke(services, async s => await s.GetRequiredService<DemoReferenceDataSeeder>().SeedDemoFlightsAsync(cancellationToken));
         await Invoke(services, async s => await s.GetRequiredService<DemoReferenceDataSeeder>().SeedPairedReturnFlightsAsync(cancellationToken));
+        await Invoke(services, async s =>
+        await s.GetRequiredService<DemoReferenceDataSeeder>().SeedExtraFlightsPerRouteAsync(cancellationToken));
 
         await Invoke(services, async s => await s.GetRequiredService<PersonalSeeder>().SeedAsync());
         await Invoke(services, async s => await s.GetRequiredService<StaffAvailabilitySeeder>().SeedAsync());

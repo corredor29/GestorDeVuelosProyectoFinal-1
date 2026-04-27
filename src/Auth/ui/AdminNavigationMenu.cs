@@ -61,6 +61,7 @@ using GestorDeVuelosProyectoFinal.src.Moduls.Sessions.UI;
 using GestorDeVuelosProyectoFinal.src.Moduls.SystemRoles.UI;
 using GestorDeVuelosProyectoFinal.src.Moduls.Users.UI;
 using GestorDeVuelosProyectoFinal.src.Moduls.Reports.UI;
+using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.UI;
 
 namespace GestorDeVuelosProyectoFinal.Auth.ui;
 
@@ -228,7 +229,8 @@ public sealed class AdminNavigationMenu
                     ("Estados de reserva", () => sp.GetRequiredService<BookingStatusesMenu>().Show()),
                     ("Transiciones de estado", () => sp.GetRequiredService<BookingStatusTransitionsMenu>().Show(cancellationToken)),
                     ("Reservas", () => sp.GetRequiredService<BookingsMenu>().RunAsync(cancellationToken)),
-                    ("Vuelos por reserva", () => sp.GetRequiredService<BookingFlightsMenu>().RunAsync(cancellationToken)));
+                    ("Vuelos por reserva", () => sp.GetRequiredService<BookingFlightsMenu>().RunAsync(cancellationToken)),
+                    ("Reprogramar reserva", () => sp.GetRequiredService<RescheduleMenu>().RunAsync(cancellationToken)));
                 break;
 
             case "Pagos y facturación":

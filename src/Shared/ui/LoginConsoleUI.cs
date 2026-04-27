@@ -45,7 +45,6 @@ public class LoginConsoleUI
             if (continuar == "Volver al menú anterior")
                 return false;
 
-            // ✅ 0 = volver
             var username = AnsiConsole.Ask<string>("[yellow]Usuario (0 = volver):[/]").Trim();
 
             if (username == "0")
