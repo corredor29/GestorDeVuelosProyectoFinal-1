@@ -12,18 +12,18 @@ public sealed class RescheduleMenu
     private readonly IBookingsService _bookingsService;
     private readonly IBookingFlightsService _bookingFlightsService;
     private readonly IFlightsRepository _flightsRepository;
-    private readonly IBookingStatusService _statusService; 
+    private readonly IBookingStatusService _statusService;
 
     public RescheduleMenu(
         IBookingsService bookingsService,
         IBookingFlightsService bookingFlightsService,
         IFlightsRepository flightsRepository,
-        IBookingStatusService statusService) 
+        IBookingStatusService statusService)
     {
         _bookingsService       = bookingsService;
         _bookingFlightsService = bookingFlightsService;
         _flightsRepository     = flightsRepository;
-        _statusService         = statusService; 
+        _statusService         = statusService;
     }
 
     public async Task RunAsync(CancellationToken cancellationToken = default)
@@ -35,7 +35,6 @@ public sealed class RescheduleMenu
         var statuses = (await _statusService.GetAllStatuses())
             .ToDictionary(s => s.Id!.Value, s => s.Name.Value);
 
-        // Mostrar tabla de todas las reservas
         var allBookings = (await _bookingsService.GetAllAsync(cancellationToken))
             .OrderBy(b => b.Id!.Value)
             .ToList();
@@ -47,13 +46,18 @@ public sealed class RescheduleMenu
             return;
         }
 
+        var allBookingFlights = (await _bookingFlightsService.GetAllAsync(cancellationToken)).ToList();
+        var allFlightsForTable = (await _flightsRepository.GetAllAsync(cancellationToken)).ToList();
+        var flightsForTableMap = allFlightsForTable.ToDictionary(f => f.Id!.Value, f => f);
+
         var table = new Table()
             .Border(TableBorder.Rounded)
             .BorderColor(Color.Grey)
             .AddColumn("[bold]ID[/]")
             .AddColumn("[bold]Cliente[/]")
             .AddColumn("[bold]Estado[/]")
-            .AddColumn("[bold]Reservado[/]")
+            .AddColumn("[bold]Vuelo[/]") 
+            .AddColumn("[bold]Salida del vuelo[/]") 
             .AddColumn("[bold]Total[/]");
 
         foreach (var b in allBookings)
@@ -72,11 +76,23 @@ public sealed class RescheduleMenu
                 _             => statusName
             };
 
+            // ✅ Buscar el vuelo asignado a esta reserva
+            var bf = allBookingFlights.FirstOrDefault(x => x.BookingId.Value == b.Id!.Value);
+
+            var flightCode = bf is not null && flightsForTableMap.TryGetValue(bf.FlightId.Value, out var fl)
+                ? fl.Code.Value
+                : "-";
+
+            var flightDeparture = bf is not null && flightsForTableMap.TryGetValue(bf.FlightId.Value, out var fl2)
+                ? fl2.DepartureAt.Value.ToString("yyyy-MM-dd HH:mm")
+                : "-";
+
             table.AddRow(
                 b.Id!.Value.ToString(),
                 b.ClientId.Value.ToString(),
                 statusLabel,
-                b.BookedAt.Value.ToString("yyyy-MM-dd HH:mm"),
+                flightCode,
+                flightDeparture,
                 b.TotalAmount.Value.ToString("C"));
         }
 
@@ -121,8 +137,8 @@ public sealed class RescheduleMenu
         }
 
         // 4. Cargar todos los vuelos
-        var allFlights = (await _flightsRepository.GetAllAsync(cancellationToken)).ToList();
-        var flightsMap = allFlights.ToDictionary(f => f.Id!.Value, f => f);
+        var allFlights = allFlightsForTable;
+        var flightsMap = flightsForTableMap;
 
         var flightChoices = bookingFlights
             .Where(bf => flightsMap.ContainsKey(bf.FlightId.Value))
@@ -206,8 +222,6 @@ public sealed class RescheduleMenu
             {
                 AnsiConsole.MarkupLine("\n[green] Reserva reprogramada correctamente.[/]");
                 Pause();
-
-                // ✅ Volver a mostrar la tabla actualizada para confirmar el cambio
                 await RunAsync(cancellationToken);
                 return;
             }

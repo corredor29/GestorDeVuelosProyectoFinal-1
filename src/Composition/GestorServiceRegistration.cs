@@ -555,6 +555,7 @@ public static class GestorServiceRegistration
         services.AddTransient<AddToWaitingListUseCase>();
         services.AddTransient<PromoteFromWaitingListUseCase>();
         services.AddTransient<RescheduleMenu>();
+        services.AddTransient<BookingHistoryMenu>();
 
 
         return services;

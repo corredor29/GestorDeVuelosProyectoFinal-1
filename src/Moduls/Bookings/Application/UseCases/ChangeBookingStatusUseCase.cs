@@ -1,3 +1,4 @@
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingFlights.Domain.Repositories;
 using GestorDeVuelosProyectoFinal.src.Moduls.BookingStatuses.Domain.Repositories;
 using GestorDeVuelosProyectoFinal.src.Moduls.BookingStatusTransitions.Domain.Repositories;
 using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.Domain.Repositories;
@@ -11,18 +12,24 @@ public sealed class ChangeBookingStatusUseCase
     private readonly IBookingsRepository _bookingsRepository;
     private readonly IBookingStatuseRepository _bookingStatusesRepository;
     private readonly IBookingStatusTransitionRepository _transitionsRepository;
+    private readonly IBookingFlightsRepository _bookingFlightsRepository;
+    private readonly PromoteFromWaitingListUseCase _promoteUseCase;       
     private readonly IUnitOfWork _unitOfWork;
 
     public ChangeBookingStatusUseCase(
         IBookingsRepository bookingsRepository,
         IBookingStatuseRepository bookingStatusesRepository,
         IBookingStatusTransitionRepository transitionsRepository,
+        IBookingFlightsRepository bookingFlightsRepository,
+        PromoteFromWaitingListUseCase promoteUseCase,       
         IUnitOfWork unitOfWork)
     {
-        _bookingsRepository = bookingsRepository;
+        _bookingsRepository        = bookingsRepository;
         _bookingStatusesRepository = bookingStatusesRepository;
-        _transitionsRepository = transitionsRepository;
-        _unitOfWork = unitOfWork;
+        _transitionsRepository     = transitionsRepository;
+        _bookingFlightsRepository  = bookingFlightsRepository; // ✅ nuevo
+        _promoteUseCase            = promoteUseCase;           
+        _unitOfWork                = unitOfWork;
     }
 
     public Task ConfirmAsync(int bookingId, CancellationToken cancellationToken = default)
@@ -58,5 +65,19 @@ public sealed class ChangeBookingStatusUseCase
 
         await _bookingsRepository.UpdateAsync(booking, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        if (targetStatusName == "Cancelled")
+        {
+            var bookingFlights = await _bookingFlightsRepository
+                .GetByBookingIdAsync(BookingId.Create(bookingId), cancellationToken);
+
+            foreach (var bf in bookingFlights)
+            {
+                var promotedBookingId = await _promoteUseCase.ExecuteAsync(bf.FlightId.Value, cancellationToken);
+
+                if (promotedBookingId.HasValue)
+                    Console.WriteLine($"[Lista de espera] Reserva {promotedBookingId.Value} promovida al vuelo {bf.FlightId.Value}.");
+            }
+        }
     }
 }
