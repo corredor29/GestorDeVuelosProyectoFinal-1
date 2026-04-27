@@ -1,3 +1,5 @@
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingFlights.Domain.Repositories;
+using GestorDeVuelosProyectoFinal.src.Moduls.BookingFlights.Domain.ValueObject;
 using GestorDeVuelosProyectoFinal.src.Moduls.BookingStatuses.Domain.Repositories;
 using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.Domain.Repositories;
 using GestorDeVuelosProyectoFinal.src.Moduls.Bookings.Domain.ValueObject;
@@ -15,6 +17,7 @@ public sealed class RescheduleBookingUseCase
     private readonly IBookingsRepository _bookingsRepository;
     private readonly IBookingStatuseRepository _statusesRepository;
     private readonly IFlightsRepository _flightsRepository;
+    private readonly IBookingFlightsRepository _bookingFlightsRepository;
     private readonly IReschedulingHistoryRepository _historyRepository;
     private readonly IWaitingListRepository _waitingListRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -23,16 +26,18 @@ public sealed class RescheduleBookingUseCase
         IBookingsRepository bookingsRepository,
         IBookingStatuseRepository statusesRepository,
         IFlightsRepository flightsRepository,
+        IBookingFlightsRepository bookingFlightsRepository,
         IReschedulingHistoryRepository historyRepository,
         IWaitingListRepository waitingListRepository,
         IUnitOfWork unitOfWork)
     {
-        _bookingsRepository    = bookingsRepository;
-        _statusesRepository    = statusesRepository;
-        _flightsRepository     = flightsRepository;
-        _historyRepository     = historyRepository;
-        _waitingListRepository = waitingListRepository;
-        _unitOfWork            = unitOfWork;
+        _bookingsRepository        = bookingsRepository;
+        _statusesRepository        = statusesRepository;
+        _flightsRepository         = flightsRepository;
+        _bookingFlightsRepository  = bookingFlightsRepository;
+        _historyRepository         = historyRepository;
+        _waitingListRepository     = waitingListRepository;
+        _unitOfWork                = unitOfWork;
     }
 
     public async Task<bool> ExecuteAsync(
@@ -73,9 +78,9 @@ public sealed class RescheduleBookingUseCase
 
         // 5. Verificar disponibilidad
         if (!newFlight.HasAvailableSeats(1))
-            return false; // sin cupo → el llamador ofrece lista de espera
+            return false;
 
-        // 6.  Primero decrementar el nuevo vuelo, luego liberar el anterior
+        // 6. Primero decrementar el nuevo vuelo, luego liberar el anterior
         newFlight.DecrementAvailableSeats(1);
         newFlight.TouchUpdatedAt();
         await _flightsRepository.UpdateAsync(newFlight, cancellationToken);
@@ -87,7 +92,18 @@ public sealed class RescheduleBookingUseCase
             await _flightsRepository.UpdateAsync(currentFlight, cancellationToken);
         }
 
-        // 7. Cambiar estado de la reserva
+        var bookingFlight = await _bookingFlightsRepository.GetByBookingAndFlightAsync(
+            BookingId.Create(bookingId),
+            FlightsId.Create(currentFlightId),
+            cancellationToken);
+
+        if (bookingFlight is not null)
+        {
+            bookingFlight.Update(bookingId, newFlightId, bookingFlight.PartialAmount.Value);
+            await _bookingFlightsRepository.UpdateAsync(bookingFlight, cancellationToken);
+        }
+
+        // 8. Cambiar estado de la reserva
         var rescheduledStatus = await _statusesRepository.GetByNameAsync("Rescheduled");
         var targetStatusId    = rescheduledStatus?.Id.Value ?? confirmedStatus.Id.Value;
 
@@ -95,7 +111,7 @@ public sealed class RescheduleBookingUseCase
         booking.TouchUpdatedAt();
         await _bookingsRepository.UpdateAsync(booking, cancellationToken);
 
-        // 8. Registrar en historial
+        // 9. Registrar en historial
         var history = ReschedulingHistor.Create(bookingId, currentFlightId, newFlightId, reason);
         await _historyRepository.SaveAsync(history, cancellationToken);
 

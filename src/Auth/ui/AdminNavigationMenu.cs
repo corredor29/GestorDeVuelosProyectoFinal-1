@@ -230,7 +230,8 @@ public sealed class AdminNavigationMenu
                     ("Transiciones de estado", () => sp.GetRequiredService<BookingStatusTransitionsMenu>().Show(cancellationToken)),
                     ("Reservas", () => sp.GetRequiredService<BookingsMenu>().RunAsync(cancellationToken)),
                     ("Vuelos por reserva", () => sp.GetRequiredService<BookingFlightsMenu>().RunAsync(cancellationToken)),
-                    ("Reprogramar reserva", () => sp.GetRequiredService<RescheduleMenu>().RunAsync(cancellationToken)));
+                    ("Reprogramar reserva", () => sp.GetRequiredService<RescheduleMenu>().RunAsync(cancellationToken)),
+                    ("Historial y lista de espera", () => sp.GetRequiredService<BookingHistoryMenu>().RunAsync(cancellationToken)));
                 break;
 
             case "Pagos y facturación":
